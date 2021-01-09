@@ -444,7 +444,7 @@ def time(unveil_Matrix):
             seconds -= 1
             frame_count /= 60
 
-        elif seconds == 0:
+        elif seconds == -1:
             minutes -= 1
             seconds += 60
 
@@ -771,6 +771,7 @@ def main():
     coord_list_flags = []  # list for the coordinates of the flags
     clickable = True  # variable that tells the program if the player can click on the matrix or not
     notQuitGame = True  # variable for the while loop
+    show_text = True
 
     while notQuitGame:
 
@@ -813,6 +814,8 @@ def main():
                                     if (flag_coord1, flag_coord2) not in board.coord_list:
                                         wrong_flag(flag_coord1, flag_coord2, unveil_matrix)
                                 clickable = False
+                                text = font.render("YOU LOST", True, black)
+                                window.blit(text, [width // 2 - 20, 25])
 
                         """ If the right mouse button has been pressed the player can place or remove a flag """
                         if event.button == RIGHT_MB:
@@ -842,6 +845,7 @@ def main():
                             text = font.render("YOU WON", True, black)
                             window.blit(text, [width // 2 - 20, height // 2 - 10])
 
+
         """ Creating a return to menu button (useful when the player wants to change the difficulty or just restart """
         x_mouse, y_mouse = pygame.mouse.get_pos()
         click_intro = pygame.mouse.get_pressed()
@@ -849,8 +853,7 @@ def main():
         box_h = 30
 
         if height // 2 + box_w // 2 > x_mouse > height // 2 - box_w // 2 and width - header + box_h > y_mouse > width - header - box_h + 30:
-            pygame.draw.rect(window, bright_red,
-                             (height // 2 - box_w // 2, width - header + box_h // 2 / 3, box_w, box_h))
+            pygame.draw.rect(window, bright_red,(height // 2 - box_w // 2, width - header + box_h // 2 / 3, box_w, box_h))
             if click_intro[0] == 1:
                 notQuitGame = False
 
@@ -861,10 +864,14 @@ def main():
         window.blit(returnText, (height // 2 - box_w // 2 + 7, width - header + box_h // 2 - 2))
 
         """ Creating the timer and placing a condtion: in case the time runs out, the player loses """
-        window.fill(grey, (0, 0, width // 2, 40))
+        window.fill(grey, (0, 0, width // 3, 40))
         time(unveil_matrix)
         if minutes == 0 and seconds == 0:
             clickable = False
+            if show_text is True:
+                text = font.render("YOU LOST", True, black)
+                window.blit(text, [width // 2 - 20, 25])
+                show_text = False
 
         pygame.display.update()
 
